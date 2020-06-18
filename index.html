@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bulma@0.9.0/css/bulma.min.css"
+    />
+  </head>
+  <body>
+    <div>
+      <form id="send">
+        <input type="file" name="picture" id="picture" />
+        <button>Envoyer une image</button>
+      </form>
+      <img id="output" />
+    </div>
+    <script>
+      //Send picture
+      document.querySelector("#send").addEventListener("submit", function (e) {
+        // Stoper le comportement par défault
+        e.preventDefault();
+        //Instanciation des classes XMLHttpRequest et FormData
+        var xhr = new XMLHttpRequest();
+        var formData = new FormData();
+        //Ajoute une nouvelle valeur à formdata
+        formData.append("picture", e.target.elements.picture.files[0]);
+        // open : méthode de XMLHttpRequest qui prend on paramètre(la méthode post , URL sur lequelle enoyer la requête)
+        // xhr.open("POST", "/upload");
+        // // Action de la requête si son statut change executer la fonction dans laquelle on dit que le statut est terminé
+        // // et qu'il est égale à 200 alors afficher une alert avec la réponse.
+        // xhr.onreadystatechange = function () {
+        //   if (xhr.readyState === 4 && xhr.status === 200) {
+        //     alert(this.responseText);
+        //   }
+        // };
+        // //envoi de l'objet formdata
+        // xhr.send(formData);
+
+        //exemple fetch api
+        fetch("/upload", {
+          method: "POST",
+          body: formData,
+        });
+      });
+
+      // Upload picture
+      document
+        .querySelector("#picture")
+        .addEventListener("change", function (e) {
+          e.preventDefault();
+          var reader = new FileReader();
+          reader.onload = function () {
+            var dataURL = reader.result;
+            var picture = document.getElementById("output");
+            picture.src = dataURL;
+          };
+          reader.readAsDataURL(e.target.files[0]);
+        });
+    </script>
+  </body>
+</html>
